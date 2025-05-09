@@ -1,0 +1,92 @@
+// Custom styles for the VuePress site
+
+// Make Mermaid diagrams more visible
+.language-mermaid {
+  background-color: #ffffff !important;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  
+  svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  
+  .node rect, 
+  .node circle, 
+  .node ellipse, 
+  .node polygon, 
+  .node path {
+    fill: #f0f0f0;
+    stroke: #333;
+    stroke-width: 1px;
+  }
+  
+  .edgePath .path {
+    stroke: #333;
+    stroke-width: 1.5px;
+  }
+  
+  .label {
+    color: #000;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .cluster rect {
+    fill: #ffffde;
+    stroke: #888;
+    stroke-width: 1px;
+  }
+}
+
+// Improve code block readability
+div[class*="language-"] {
+  border-radius: 6px;
+  
+  pre, code {
+    font-family: 'Consolas', 'Monaco', monospace;
+  }
+}
+
+// Enhance table styling
+table {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+  
+  th {
+    background-color: #f3f3f3;
+    font-weight: bold;
+  }
+  
+  tr:nth-child(2n) {
+    background-color: #f8f8f8;
+  }
+  
+  th, td {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+  }
+}
+
+// Improve sidebar navigation
+.sidebar {
+  .sidebar-group {
+    &.is-sub-group {
+      padding-left: 0.5rem;
+    }
+    
+    &.collapsable {
+      .sidebar-heading {
+        cursor: pointer;
+      }
+    }
+  }
+  
+  a.sidebar-link {
+    &.active {
+      font-weight: 600;
+    }
+  }
+}
