@@ -1,0 +1,44 @@
+Music Besties App v1.1
+
+Overview
+
+Music Besties is all about helping you rank, review, and share your favorite music eras and songs, while connecting you with other fans in fun new ways. Here’s what you’ll be able to do with the latest updates:
+
+Explore, Rank, and Review
+Browse Music Eras: Scroll through cards for different music eras. Tap any card to see your detailed rankings and reviews.
+
+Edit Your Rankings (with Sessions): When you tap Edit, you can change your rankings-but now, you can only save changes once every 24 hours. This makes each ranking session more deliberate and meaningful. If you edit at 8 PM, you’ll need to wait until 8 PM the next day to save again.
+
+See Your Ranking History: Track how your album and song rankings have changed over time. You can look back and see how your musical tastes have evolved.
+
+Write and Edit Reviews: For each era or album, rate with stars and write a short review. You can always update your thoughts during your next ranking session.
+
+Easy Onboarding
+Simple Start for New Users: New users can immediately start using the app without creating an account. When they’re ready to save progress, they’ll be prompted to sign up-making onboarding smooth and welcoming.
+
+Social Sharing & Community
+Share Your Profile: Every user gets a unique, shareable link to their public profile. You can choose exactly what to show-like specific album rankings, song lists, or reviews.
+
+Share on Social Media: Easily share your profile link on social platforms with eye-catching graphics, text, and images to invite friends and other fans.
+
+Invite Others to Compare: Anyone clicking your shared profile link can try the app right away and compare their Taylor Swift preferences with yours. They’ll go through a special onboarding process and only need to register if they want to see their comparison results.
+
+Find Your Bestie & League Table
+Find Your Bestie: When someone views your public profile, they can create an account and compare their rankings with yours. The app will show a "league table" ranking people by how closely their Taylor Swift music taste matches yours.
+
+Album-Specific Similarity (Potential): In the future, you may even see how similar you are to others on a per-album basis.
+
+Safe and Positive Community
+Reddit Verification for Matching: To use the bestie matching feature, users must verify their Reddit account and show they are subscribed to positive Taylor Swift communities. If verification doesn’t work, users get a clear explanation and can apply for manual review by sharing why they’re genuine fans.
+
+Manage Your Experience
+Profile and Preferences: View your profile, stats, and preferences. Control what’s visible on your public profile.
+
+Settings: Adjust themes, notifications, and other options to personalize your experience.
+
+Legal Info: Read about data use and app policies anytime.
+
+Technical Improvements
+Fast and Secure: The app uses modern tools (Supabase for user management, Vercel for deployment, Square for payments) and stores most data locally for speed, only using the cloud for the most important tasks.
+
+With these improvements, Music Besties will make it even easier and more fun to rank, review, and share your love of music-while helping you connect with fellow Swifties in a safe and positive space.

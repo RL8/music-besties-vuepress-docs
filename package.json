@@ -1,0 +1,20 @@
+{
+  "name": "music-besties-vuepress-docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs",
+    "deploy": "powershell -File .\\deploy.ps1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "mermaid": "^8.14.0",
+    "vuepress": "^1.9.10",
+    "vuepress-plugin-mermaidjs": "^1.9.1"
+  }
+}
