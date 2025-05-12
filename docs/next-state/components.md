@@ -12,7 +12,7 @@ The application is structured around these key components, which are implemented
 flowchart TD
     App["App.vue\n(Root component)"] --> Dashboard["DashboardView.vue\n(Main entry point)"];
     App --> EditRankings["EditRankingsView.vue\n(Selection interface)"];
-    App --> Sidebar["SidebarPanel.vue\n(Rankings & Reviews & History)"];
+    App --> Sidebar["SidebarPanel.vue\n(Your Journal | Community | Besties)"];
     App --> Navigation["NavigationSystem.vue\n(Global navigation)"];
     App --> BestieMatching["BestieMatchingView.vue\n(Social matching)"];
     App --> Onboarding["OnboardingView.vue\n(New user flow)"];
@@ -24,9 +24,13 @@ flowchart TD
     EditRankings --> ItemChips["ItemChip.vue\n(Selectable items)"];
     EditRankings --> CooldownTimer["CooldownTimer.vue\n(24-hour save limit)"];
     
+    Sidebar --> MainTabNavigation["MainTabNavigation.vue\n(Tab navigation)"];
     Sidebar --> RankingsList["RankingsList.vue\n(Ordered list)"];
-    Sidebar --> ReviewForm["ReviewForm.vue\n(Rating & comments)"];
-    Sidebar --> HistoryTab["HistoryTab.vue\n(Ranking changes)"];
+    Sidebar --> SongCard["SongCard.vue\n(Song display)"];
+    Sidebar --> ReviewDisplay["ReviewDisplay.vue\n(Rating & review)"];
+    Sidebar --> CommentSection["CommentSection.vue\n(User comments)"];
+    Sidebar --> CommunityReviewsList["CommunityReviewsList.vue\n(Other users' reviews)"];
+    Sidebar --> BestieMatchList["BestieMatchList.vue\n(Similar users)"];
     Sidebar --> ShareOptions["ShareOptions.vue\n(Social sharing)"];
     
     BestieMatching --> LeagueTable["LeagueTable.vue\n(User similarity ranking)"];
@@ -64,7 +68,7 @@ flowchart TD
 - **App.vue**: The root component that manages routing and global state
 - **DashboardView.vue**: Main entry point displaying the Era Cards grid
 - **EditRankingsView.vue**: Interface for selecting and ranking items
-- **SidebarPanel.vue**: Context-sensitive panel for viewing rankings, managing reviews, and tracking history
+- **SidebarPanel.vue**: Context-sensitive panel with three-layer navigation for personal journal content, community interactions, and bestie matching
 - **NavigationSystem.vue**: Global navigation system accessible from all views
 - **BestieMatchingView.vue**: New in v1.1 - Interface for finding users with similar music taste
 - **OnboardingView.vue**: New in v1.1 - Introduction flow for new users
@@ -74,11 +78,15 @@ flowchart TD
 - **EraCard.vue**: Reusable component for era display on the dashboard
 - **SelectionTabs.vue**: Tab navigation for different ranking categories
 - **ItemChip.vue**: Interactive component for selection functionality
+- **MainTabNavigation.vue**: New in v1.1 - Tab navigation between Your Journal, Community, and Besties
 - **RankingsList.vue**: Component for displaying ordered rankings
-- **ReviewForm.vue**: Form component for ratings and comments
+- **SongCard.vue**: New in v1.1 - Compact display of song with rank, rating, and comment count
+- **ReviewDisplay.vue**: New in v1.1 - Display and edit interface for personal reviews
+- **CommentSection.vue**: New in v1.1 - Sequential blog-like commenting system
+- **CommunityReviewsList.vue**: New in v1.1 - List of reviews from other users
+- **BestieMatchList.vue**: New in v1.1 - Display of connected and discoverable users with similar tastes
 - **HistoryIndicator.vue**: New in v1.1 - Visual indicator for available ranking history
 - **CooldownTimer.vue**: New in v1.1 - Timer displaying cooldown period for ranking saves
-- **HistoryTab.vue**: New in v1.1 - Tab in sidebar showing ranking history
 - **ShareOptions.vue**: New in v1.1 - Interface for sharing rankings and reviews
 - **LeagueTable.vue**: New in v1.1 - Table showing users with similar music taste
 - **RedditVerification.vue**: New in v1.1 - Interface for verifying Reddit account
@@ -95,6 +103,279 @@ flowchart TD
 - **TermsView.vue**: View component for legal information
 
 ## New Components in v1.1
+
+### Component: MainTabNavigation
+
+| Property      | Type             | Required | Description                     |
+|---------------|------------------|----------|---------------------------------|
+| `tabs`        | `Array<Object>`  | Yes      | List of available tabs          |
+| `activeTabId` | `string`         | Yes      | ID of the currently active tab  |
+| `currentLayer`| `number`         | Yes      | Current navigation layer (1-3)  |
+| `disableBestiesInLayer3` | `boolean` | No    | Whether to disable Besties tab in Layer 3 |
+
+**Tab Object Structure:**
+
+```javascript
+{
+  id: String,           // Unique identifier
+  title: String,        // Display name
+  icon: String,         // Optional icon name
+  disabled: Boolean     // Whether tab is disabled
+}
+```
+
+**Events:**
+
+| Event         | Payload           | Description                      |
+|---------------|-------------------|----------------------------------|
+| `@tab-change` | `tabId: string`   | Emitted when a tab is selected   |
+
+**CSS Classes:**
+
+* `main-tab-navigation`
+* `main-tab-navigation__tab`
+* `main-tab-navigation__tab--active`
+* `main-tab-navigation__tab--disabled`
+
+**Implementation Notes:**
+
+- Implements the primary tab navigation for the sidebar panel
+- Automatically disables the Besties tab when in Layer 3
+- Provides visual indication of the currently active tab
+- Supports keyboard navigation between tabs
+- Handles touch and mouse interactions
+
+### Component: SongCard
+
+| Property      | Type             | Required | Description                     |
+|---------------|------------------|----------|---------------------------------|
+| `song`        | `Object`         | Yes      | Song data object                |
+| `rank`        | `number`         | Yes      | User's ranking of the song      |
+| `compact`     | `boolean`        | No       | Whether to use compact display  |
+
+**Song Object Structure:**
+
+```javascript
+{
+  id: String,             // Unique identifier
+  title: String,          // Song title
+  artist: String,         // Artist name (optional)
+  albumTitle: String,     // Album title
+  duration: Number,       // Duration in seconds
+  userRating: Number,     // User's rating (1-5)
+  commentCount: Number,   // Number of user comments
+  imageUrl: String        // Album art URL
+}
+```
+
+**Events:**
+
+| Event         | Payload           | Description                      |
+|---------------|-------------------|----------------------------------|
+| `@select`     | `songId: string`  | Emitted when card is selected    |
+
+**CSS Classes:**
+
+* `song-card`
+* `song-card--compact`
+* `song-card__rank`
+* `song-card__title`
+* `song-card__rating`
+* `song-card__comment-count`
+
+**Implementation Notes:**
+
+- Displays a song with its rank, rating, and comment count
+- Compact mode shows minimal information for list views
+- Expanded mode includes more details and interaction options
+- Uses star icons for rating display
+- Shows comment count with speech bubble icon
+
+### Component: ReviewDisplay
+
+| Property      | Type             | Required | Description                     |
+|---------------|------------------|----------|---------------------------------|
+| `review`      | `Object`         | Yes      | Review data object              |
+| `editable`    | `boolean`        | No       | Whether review can be edited    |
+| `showHistory` | `boolean`        | No       | Whether to show review history  |
+
+**Review Object Structure:**
+
+```javascript
+{
+  id: String,             // Unique identifier
+  rating: Number,         // Rating (1-5)
+  content: String,        // Review text
+  lastUpdated: Date,      // Last update timestamp
+  history: Array          // Previous versions
+}
+```
+
+**Events:**
+
+| Event         | Payload           | Description                      |
+|---------------|-------------------|----------------------------------|
+| `@edit`       | `{}`              | Emitted when edit button clicked |
+| `@save`       | `review: Object`  | Emitted when review is saved     |
+| `@view-history` | `date: Date`    | Emitted when history item clicked|
+
+**CSS Classes:**
+
+* `review-display`
+* `review-display--editing`
+* `review-display__rating`
+* `review-display__content`
+* `review-display__history`
+
+**Implementation Notes:**
+
+- Displays a user's review with rating and text content
+- Supports editing mode with star rating input and text area
+- Shows timestamp of last update
+- Provides horizontal scrolling history of previous versions
+- Clicking on history item loads that version for viewing
+
+### Component: CommentSection
+
+| Property      | Type             | Required | Description                     |
+|---------------|------------------|----------|---------------------------------|
+| `comments`    | `Array<Object>`  | Yes      | List of comment objects         |
+| `itemId`      | `string`         | Yes      | ID of the item being commented on |
+| `allowAdding` | `boolean`        | No       | Whether to show add comment UI  |
+| `maxLength`   | `number`         | No       | Maximum comment length          |
+
+**Comment Object Structure:**
+
+```javascript
+{
+  id: String,             // Unique identifier
+  content: String,        // Comment text
+  timestamp: Date,        // Creation timestamp
+  userId: String,         // User who created the comment
+  username: String        // Display name of user
+}
+```
+
+**Events:**
+
+| Event         | Payload           | Description                      |
+|---------------|-------------------|----------------------------------|
+| `@add-comment`| `content: string` | Emitted when new comment added   |
+| `@delete-comment` | `commentId: string` | Emitted when comment deleted |
+
+**CSS Classes:**
+
+* `comment-section`
+* `comment-section__list`
+* `comment-section__item`
+* `comment-section__input`
+* `comment-section__timestamp`
+
+**Implementation Notes:**
+
+- Displays comments in reverse chronological order (newest first)
+- Supports adding new comments with character counter
+- Shows timestamps in relative format (e.g., "2 days ago")
+- Allows deleting own comments
+- Implements infinite scrolling for long comment lists
+
+### Component: CommunityReviewsList
+
+| Property      | Type             | Required | Description                     |
+|---------------|------------------|----------|---------------------------------|
+| `reviews`     | `Array<Object>`  | Yes      | List of community review objects|
+| `itemId`      | `string`         | Yes      | ID of the item being reviewed   |
+| `sortBy`      | `string`         | No       | Sort method (recent, rating)    |
+| `maxPreviewLength` | `number`     | No       | Max length for preview text     |
+
+**Community Review Object Structure:**
+
+```javascript
+{
+  id: String,             // Unique identifier
+  userId: String,         // User who created the review
+  username: String,       // Display name of user
+  rating: Number,         // Rating (1-5)
+  content: String,        // Review text
+  timestamp: Date,        // Creation timestamp
+  commentCount: Number,   // Number of comments on this review
+  userProfileUrl: String  // URL to user's profile
+}
+```
+
+**Events:**
+
+| Event         | Payload           | Description                      |
+|---------------|-------------------|----------------------------------|
+| `@expand-review` | `reviewId: string` | Emitted when review is expanded |
+| `@view-profile` | `userId: string` | Emitted when profile link clicked |
+
+**CSS Classes:**
+
+* `community-reviews-list`
+* `community-reviews-list__item`
+* `community-reviews-list__rating`
+* `community-reviews-list__username`
+* `community-reviews-list__preview`
+* `community-reviews-list__actions`
+
+**Implementation Notes:**
+
+- Displays a list of reviews from other users
+- Shows username, rating, and preview of review content
+- Provides expand option to view full review and comments
+- Includes link to view user's profile
+- Supports sorting by recency or rating
+- Implements infinite scrolling for long lists
+
+### Component: BestieMatchList
+
+| Property      | Type             | Required | Description                     |
+|---------------|------------------|----------|---------------------------------|
+| `matches`     | `Array<Object>`  | Yes      | List of user match objects      |
+| `itemId`      | `string`         | Yes      | ID of the era or "all" for global|
+| `showConnected` | `boolean`      | No       | Whether to show connected users |
+| `showDiscover` | `boolean`       | No       | Whether to show discoverable users |
+
+**Match Object Structure:**
+
+```javascript
+{
+  userId: String,           // Unique identifier
+  username: String,         // Display name
+  matchPercentage: Number,  // 0-100 similarity score
+  connectionDate: Date,     // When connection was made (if connected)
+  connectionType: String,   // "outgoing" or "incoming"
+  topRankings: Array,       // List of top ranked songs/eras
+  profileUrl: String        // Link to user profile
+}
+```
+
+**Events:**
+
+| Event         | Payload           | Description                      |
+|---------------|-------------------|----------------------------------|
+| `@connect`    | `userId: string`  | Emitted when connect button clicked |
+| `@view-profile` | `userId: string` | Emitted when profile link clicked |
+
+**CSS Classes:**
+
+* `bestie-match-list`
+* `bestie-match-list__section`
+* `bestie-match-list__item`
+* `bestie-match-list__username`
+* `bestie-match-list__percentage`
+* `bestie-match-list__connection-icon`
+* `bestie-match-list__rankings`
+
+**Implementation Notes:**
+
+- Displays users with similar music taste in two sections: Connected and Discover
+- Shows match percentage prominently
+- Displays connection status with directional icons (↑ for outgoing, ↓ for incoming)
+- Shows top ranked songs/eras as scrollable chips
+- Provides connect button for users in the Discover section
+- Includes link to view user's profile
 
 ### Component: HistoryIndicator
 

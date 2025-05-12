@@ -113,8 +113,8 @@ The FooterDisclaimer component displays legal text at the bottom of the screen.
 |-------------|--------|---------------------------|
 | Click hamburger menu icon | Opens the left navigation menu | Emits `@menuClick` event, handled by App.vue |
 | Click Edit button | Navigates to Edit Rankings View | Emits `@editClick` event, triggers route change |
-| Click on an era card | Opens the Sidebar Panel with era details | Emits card `@click` event with era ID |
-| Click on history indicator | Opens the Sidebar Panel with History tab active | Emits `@historyClick` event with era ID |
+| Click on an era card | Opens the Sidebar Panel with era's song list in Your Journal tab | Emits card `@click` event with era ID |
+| Click on history indicator | Opens the Sidebar Panel with song details showing review history | Emits `@historyClick` event with era ID and song ID |
 | Long-press on an era card | Shows additional options menu | Emits card `@longpress` event |
 
 ## State Management

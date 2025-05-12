@@ -30,15 +30,26 @@ flowchart TD
     NavSidebar -->|Terms & Privacy| Terms[Terms/Privacy View]
     
     Sidebar -->|Close Button| Dashboard
-    Sidebar -->|Switch to Rankings Tab| SidebarRankings[Rankings Tab]
-    Sidebar -->|Switch to History Tab| SidebarHistory[History Tab]
-    Sidebar -->|Switch to Review Tab| SidebarReview[Review Tab]
-    SidebarRankings -->|Share Button| ShareOptions[Share Dialog]
-    SidebarHistory -->|Restore Button| RestoreConfirm[Restore Confirmation]
-    SidebarReview -->|Edit Review| ReviewPanel[Review Form]
-    SidebarReview -->|Share Button| ShareOptions
-    ReviewPanel -->|Save/Cancel| SidebarReview
-    RestoreConfirm -->|Confirm| SidebarRankings
+    Sidebar -->|Switch to Your Journal Tab| SidebarJournal[Your Journal Tab]
+    Sidebar -->|Switch to Community Tab| SidebarCommunity[Community Tab]
+    Sidebar -->|Switch to Besties Tab| SidebarBesties[Besties Tab]
+    
+    SidebarJournal -->|Tap Song Card| SongDetail[Song Detail View]
+    SidebarJournal -->|Share Button| ShareOptions[Share Dialog]
+    SongDetail -->|Edit Review| ReviewPanel[Review Form]
+    SongDetail -->|Add Comment| CommentPanel[Comment Form]
+    SongDetail -->|View Review History| HistoryView[Review History]
+    SongDetail -->|Breadcrumb Navigation| SidebarJournal
+    ReviewPanel -->|Save/Cancel| SongDetail
+    CommentPanel -->|Save/Cancel| SongDetail
+    
+    SidebarCommunity -->|Expand Review| CommunityReviewDetail[Community Review Detail]
+    SidebarCommunity -->|View Profile| OtherProfile
+    CommunityReviewDetail -->|Breadcrumb Navigation| SidebarCommunity
+    
+    SidebarBesties -->|Connect Button| ConnectionConfirm[Connection Confirmation]
+    SidebarBesties -->|View Profile| OtherProfile
+    ConnectionConfirm -->|Confirm| SidebarBesties
     
     EditRankings -->|Cancel Button| Dashboard
     EditRankings -->|Save Button| SaveCheck{Cooldown Complete?}
@@ -156,10 +167,12 @@ flowchart TD
 | Dashboard | Album selection | Click album card | Album Sidebar |
 | Dashboard | Edit mode | Click Edit Rankings | Edit Rankings Screen |
 | Dashboard | History indicator | Click history icon | Sidebar with History tab |
-| Album Sidebar | Tab selection | Switch between Rankings, History, Review | Different sidebar tabs |
-| Album Sidebar | Sharing content | Click Share button | Share options dialog |
-| Album Sidebar | History restoration | Click Restore button | Confirmation dialog |
-| Album Sidebar | Return to browsing | Click Close | Dashboard |
+| Sidebar Panel | Layer navigation | Navigate using breadcrumbs | Different navigation layers |
+| Sidebar Panel | Tab selection | Switch between Your Journal, Community, Besties | Different sidebar tabs |
+| Sidebar Panel | Song selection | Tap on song card | Song detail view |
+| Sidebar Panel | Community interaction | Expand community review | Community review detail |
+| Sidebar Panel | Bestie connection | Tap Connect button | Connection confirmation |
+| Sidebar Panel | Return to browsing | Click Close | Dashboard |
 | Edit Rankings | Song organization | Tap songs, Change tabs | Remains on Edit Rankings |
 | Edit Rankings | Save attempt | Click Save during cooldown | Cooldown message |
 | Edit Rankings | Exit with changes | Click Cancel with unsaved changes | Confirmation Modal |
@@ -188,14 +201,23 @@ The 24-hour cooldown between ranking saves is designed to encourage thoughtful c
 - **Persistent state**: Cooldown status persists between sessions
 - **Contextual messaging**: Explanatory text helps users understand the purpose of the limitation
 
-### History Tracking Experience
+### Three-Layer Navigation Experience
 
-The history feature provides users with a way to track their evolving music preferences:
+The three-layer navigation approach provides users with a clear path through content:
 
-- **Subtle indicators**: History icons appear only when history is available
-- **Chronological organization**: Changes are presented in reverse chronological order
-- **Visual differentiation**: Added, removed, and moved items have distinct visual treatments
-- **Restoration capability**: Users can easily restore previous rankings
+- **Intuitive progression**: Users move from general to specific content through logical layers
+- **Breadcrumb navigation**: Clear path showing current location and allowing easy backtracking
+- **Sticky header**: Navigation controls remain visible during scrolling
+- **Contextual tabs**: Available tabs adapt based on the current layer (Besties tab unavailable in Layer 3)
+
+### Review History Experience
+
+The review history feature provides users with a way to track their evolving opinions:
+
+- **Horizontal scrolling**: Review history is presented as horizontally scrollable date chips
+- **Chronological organization**: Previous versions are organized by date
+- **One-tap access**: Users can quickly view any previous version of their review
+- **Visual consistency**: History view maintains the same visual language across the app
 
 ### Social Features Experience
 

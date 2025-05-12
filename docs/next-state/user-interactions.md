@@ -148,6 +148,164 @@ Users can share their reviews with others:
 4. System generates a shareable link with preview data
 5. User shares the link through their chosen platform
 
+## Sidebar Panel Interactions
+
+### Three-Layer Navigation
+
+The sidebar panel implements a three-layer navigation approach that allows users to move between different levels of content:
+
+1. **Layer 1 Navigation:**
+   - User taps on an era card on the Dashboard View
+   - System opens the sidebar panel showing the era's song list in the Your Journal tab
+   - User can switch between Your Journal, Community, and Besties tabs
+
+2. **Layer 2 Navigation:**
+   - When viewing a list of songs, user taps on a specific song
+   - System navigates to Layer 3 showing the song details
+   - The Besties tab becomes unavailable at Layer 3
+
+3. **Layer 3 Navigation:**
+   - User can view and edit their review and comments for the song
+   - User can view community reviews and comments for the song
+   - User taps the breadcrumb navigation to return to previous layers
+
+**Figure: Sidebar Navigation Flow**
+
+```mermaid
+stateDiagram-v2
+    [*] --> Layer1
+    
+    Layer1 --> Layer2: Tap Era Card
+    Layer2 --> Layer3: Tap Song Card
+    
+    Layer3 --> Layer2: Tap Breadcrumb
+    Layer2 --> Layer1: Tap Breadcrumb
+    Layer1 --> [*]: Close Sidebar
+    
+    state Layer1 {
+        [*] --> YourJournal1
+        YourJournal1 --> Community1: Tap Community Tab
+        Community1 --> Besties1: Tap Besties Tab
+        Besties1 --> YourJournal1: Tap Your Journal Tab
+    }
+    
+    state Layer2 {
+        [*] --> YourJournal2
+        YourJournal2 --> Community2: Tap Community Tab
+        Community2 --> Besties2: Tap Besties Tab
+        Besties2 --> YourJournal2: Tap Your Journal Tab
+    }
+    
+    state Layer3 {
+        [*] --> YourJournal3
+        YourJournal3 --> Community3: Tap Community Tab
+        Community3 --> YourJournal3: Tap Your Journal Tab
+        note right of Community3: Besties tab not available in Layer 3
+    }
+```
+
+*State diagram showing the three-layer navigation flow in the sidebar panel, including tab switching and the unavailability of the Besties tab in Layer 3.*
+
+### Your Journal Interactions
+
+The Your Journal tab allows users to view and manage their personal content:
+
+1. **Viewing Song List:**
+   - User navigates to an era in the sidebar panel
+   - System displays a list of the user's ranked songs for that era
+   - Each song card shows rank, title, rating, and comment count
+
+2. **Viewing Song Details:**
+   - User taps on a song card to view details
+   - System displays the song's rank, user's rating, review, and comments
+   - User can see their review history with previous versions
+
+3. **Adding/Editing Reviews:**
+   - User taps the Edit Review button
+   - User sets a star rating (1-5 stars)
+   - User adds or edits review text
+   - User saves the review to persist changes
+
+4. **Adding Comments:**
+   - User taps the Add Comment button
+   - User enters comment text
+   - User saves the comment to add it to the list
+   - Comments are displayed in reverse chronological order
+
+### Community Interactions
+
+The Community tab allows users to view and interact with content from other users:
+
+1. **Viewing Community Reviews:**
+   - User switches to the Community tab
+   - System displays a list of reviews from other users
+   - Each review shows username, rating, and preview text
+
+2. **Expanding Community Reviews:**
+   - User taps the Expand button on a review
+   - System displays the full review with associated comments
+   - User can view the reviewer's profile
+
+3. **Viewing Review Comments:**
+   - When viewing an expanded review, user can see comments
+   - Comments are displayed in chronological order
+   - User can expand comments to see full text
+
+### Bestie Matching Interactions
+
+The Besties tab allows users to connect with others who have similar music preferences:
+
+1. **Viewing Bestie Matches:**
+   - User switches to the Besties tab
+   - System displays two sections: Connected and Discover
+   - Connected shows users already connected with
+   - Discover shows potential new connections
+
+2. **Connecting with Besties:**
+   - User views potential matches in the Discover section
+   - User taps the Connect button for a user they want to connect with
+   - System creates a connection between the users
+   - Connected user moves to the Connected section
+
+3. **Viewing Bestie Profiles:**
+   - User taps the View Profile button for a bestie
+   - System navigates to the bestie's profile page
+   - User can see the bestie's rankings and reviews
+
+4. **Viewing Ranking Similarities:**
+   - User can see match percentage with each bestie
+   - User can scroll through chips showing the bestie's top ranked songs
+   - Connection type is indicated with directional icons (↑ for outgoing, ↓ for incoming)
+
+**Figure: Bestie Matching Interaction Flow**
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI as Sidebar Panel
+    participant Matching as Matching System
+    participant Profiles as User Profiles
+    
+    User->>UI: Switches to Besties tab
+    UI->>Matching: fetchBestieMatches(eraId)
+    Matching-->>UI: Return connected and discoverable users
+    UI-->>User: Display Connected and Discover sections
+    
+    User->>UI: Taps Connect button for a user
+    UI->>Matching: createConnection(userId)
+    Matching->>Matching: calculateMatchPercentage()
+    Matching->>Matching: recordConnectionDate()
+    Matching->>Matching: setConnectionType("outgoing")
+    Matching-->>UI: Update connection status
+    UI-->>User: Move user to Connected section
+    
+    User->>UI: Taps View Profile button
+    UI->>Profiles: navigateToProfile(userId)
+    Profiles-->>User: Display user profile
+```
+
+*Sequence diagram showing the interaction flow for bestie matching, including viewing matches, connecting with users, and viewing profiles.*
+
 ## History Tracking
 
 ### Viewing Ranking History
@@ -156,9 +314,9 @@ Users can view the history of their ranking changes:
 
 1. User navigates to the Dashboard View
 2. User taps on an era card with a history indicator
-3. User switches to the "History" tab in the Sidebar Panel
-4. The history timeline displays previous rankings with timestamps
-5. Changes are highlighted with visual indicators (added, removed, moved up/down)
+3. User navigates to a song in the Your Journal tab
+4. User views the Review History section showing previous versions
+5. User can tap on a date to view the review from that point in time
 
 ### Restoring Previous Rankings
 

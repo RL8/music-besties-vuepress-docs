@@ -8,7 +8,7 @@ The Music Besties application consists of multiple screens and views that provid
 |------|----------------|----------------|------------------|
 | **Dashboard View** | Main entry point displaying music era information | Era cards grid, Header bar, Selection counter, Rating display, Era emoji, History icon, Footer disclaimer | Open navigation menu, Enter edit mode, View era details, View ranking history |
 | **Edit Rankings View** | Interface for selecting and ranking items with 24-hour cooldown | Header controls, Cooldown timer, Tab navigation bar, Selection counter, Instruction text, Item chips, Selection indicators | Switch tabs, Select/remove items, Change order, Save changes (once per 24 hours), Cancel editing |
-| **Sidebar Panel** | Context-sensitive panel for viewing rankings, history, and reviews | Panel header, Tab navigation (Rankings, History, Review), Rankings list, History timeline, Star rating display, Review text area, Review form, Share button | Switch sidebar tabs, View rankings, Browse history, Add/edit review, Share content, Close sidebar |
+| **Sidebar Panel** | Context-sensitive panel for personal journal content, community interactions, and bestie matching | Panel header with breadcrumb navigation, Main tab navigation (Your Journal, Community, Besties), Song cards, Review display, Comment section, Community reviews list, Bestie match list | Navigate through three layers, Switch between tabs, View and edit reviews, Add comments, View community content, Connect with besties, Share content, Close sidebar |
 | **About View** | Informational content about the application | Header bar, App description, Version information, Credits section, Text sections | Read information, Check version, See credits, Return to previous screen |
 | **Profile View** | User-specific information, statistics, and sharing options | Header bar, Profile image, User information, Public link, Statistics section, Preferences area, Share button, Bestie matches | View profile data, Check activity, Access settings, Copy public link, Share profile, View besties, Return to previous screen |
 | **Settings View** | User preference and privacy configuration | Header bar, Settings categories, Toggle switches, Radio buttons, Dropdown menus, Setting descriptions, Privacy controls, Account verification | Toggle options, Select preferences, Adjust display settings, Manage notifications, Configure data options, Set privacy, Verify account, Return to previous screen |
@@ -126,79 +126,186 @@ The Edit Rankings View is designed to be intuitive and easy to use, allowing use
 
 ## Sidebar Panel
 
-The Sidebar Panel provides detailed information about a selected era, including rankings, history, and reviews. It slides in from the side when a user taps on an era card.
+The Sidebar Panel is a context-sensitive panel that slides in from the right side of the screen, providing detailed information and interaction options for individual songs within a specific music era. It implements a three-layer navigation approach with clear separation between personal content, community content, and bestie matching functionality.
 
-**Figure: Sidebar Panel Layout - Rankings Tab**
+### Navigation Structure
+
+The sidebar implements a three-layer navigation approach:
+
+1. **Layer 1: Main Tabs**
+   - Your Journal: Personal content
+   - Community: Content from other users
+   - Besties: Matching and connections
+
+2. **Layer 2: Content Lists**
+   - Era List: When viewing All Eras
+   - Song List: When viewing a specific era
+   - Review List: When viewing community content for a song/era
+   - Bestie List: When viewing besties tab (with Connected and Discover sections)
+
+3. **Layer 3: Detail Views**
+   - Era Detail: Your review and comments for an era
+   - Song Detail: Your review and comments for a song
+   - Review Detail: A specific community review with its comments
+   - Note: Besties tab is only available at Layers 1 and 2, and is inaccessible at Layer 3
+
+### Header Design
+
+- Implements a sticky header with navigation path design
+- Header freezes during scrolling for easy navigation
+- Uses breadcrumb-style navigation path (e.g., "All Eras > Folklore > cardigan")
+- Clear separation between navigation and content
+- Includes close button [X] to dismiss the sidebar
+
+**Figure: Sidebar Panel - Your Journal Tab (Layer 2)**
 
 ```
 +-----------------------------------------------------+
-|  ← Red ❤️                                  [X]     |
+|  ← Folklore 🤍                              [X]     |
 +-----------------------------------------------------+
 |                                                     |
-| | Rankings | History | Review & Notes |             |
+| | Your Journal | Community | Besties |              |
 +-----------------------------------------------------+
 |                                                     |
-| Your Ranked Songs:                                  |
+| Your Ranked Songs in Folklore:                      |
 |                                                     |
-| 1. All Too Well                                     |
-| 2. State of Grace                                   |
-| 3. 22                                               |
-| 4. I Knew You Were Trouble                          |
-| 5. Begin Again                                      |
+| +-------------------------------------------+       |
+| | #1 cardigan                               |       |
+| | ★★★★★  💬 2                             |       |
+| +-------------------------------------------+       |
 |                                                     |
-| Total: 5 of 19 songs ranked                         |
+| +-------------------------------------------+       |
+| | #2 august                                 |       |
+| | ★★★★☆  💬 1                             |       |
+| +-------------------------------------------+       |
 |                                                     |
-| [Share Rankings]                                    |
+| +-------------------------------------------+       |
+| | #3 exile (feat. Bon Iver)                |       |
+| | ★★★★★  💬 3                             |       |
+| +-------------------------------------------+       |
 |                                                     |
+| +-------------------------------------------+       |
+| | #4 the 1                                 |       |
+| | ★★★★☆  💬 1                             |       |
+| +-------------------------------------------+       |
 +-----------------------------------------------------+
 ```
 
-*Sidebar panel showing the Rankings tab with an ordered list of selected songs. The panel includes a header with the era name and emoji, tab navigation, a count of ranked items, and a share button. The X button allows users to close the panel and return to the previous view.*
+*Sidebar panel showing the Your Journal tab with a list of ranked songs. Each song card displays the rank, title, star rating, and comment count. The panel includes a sticky header with the era name and emoji.*
 
-**Figure: Sidebar Panel - History Tab**
+**Figure: Sidebar Panel - Song Detail View (Layer 3)**
 
 ```
 +-----------------------------------------------------+
-|  ← Red ❤️                                  [X]     |
+|  All Eras > Folklore > cardigan            [X]     |
+|  -----------------------------------------------    |
+|  | Your Journal | Community |                       |
 +-----------------------------------------------------+
 |                                                     |
-| | Rankings | History | Review & Notes |             |
-+-----------------------------------------------------+
+| Ranked #1 in Your List                              |
 |                                                     |
-| Ranking History:                                    |
+| Your Rating: ★★★★★                               |
 |                                                     |
-| May 9, 2025 (Current)                               |
-| 1. All Too Well                                     |
-| 2. State of Grace                                   |
-| 3. 22                                               |
-| 4. I Knew You Were Trouble                          |
-| 5. Begin Again                                      |
+| Your Review (May 8, 2025):                          |
+| "The imagery in this song is incredible. The        |
+| way it connects to the other songs in the           |
+| folklore triangle makes it even more powerful.      |
+| One of her best lead singles ever."                 |
+|                                                     |
+| Review History:                                     |
+| [May 8] [Apr 20] [Mar 15]                          |
+|                                                     |
+| [Edit Review]                                       |
+|                                                     |
+| Your Comments:                                      |
+|                                                     |
+| May 10, 2025                                        |
+| "The music video for this is so beautiful and       |
+| perfectly captures the nostalgic feeling."          |
 |                                                     |
 | May 5, 2025                                         |
-| 1. All Too Well                                     |
-| 2. 22                                               |
-| 3. I Knew You Were Trouble                          |
-| 4. State of Grace                                   |
-| 5. Begin Again                                      |
+| "Listened to this on a rainy day and it hit         |
+| differently. The piano is so haunting."             |
 |                                                     |
-| May 1, 2025                                         |
-| 1. All Too Well                                     |
-| 2. I Knew You Were Trouble                          |
-| 3. 22                                               |
-| 4. Holy Ground                                      |
-| 5. State of Grace                                   |
-|                                                     |
+| [+ Add New Comment]                                 |
 +-----------------------------------------------------+
 ```
 
-*Sidebar panel showing the History tab with a timeline of ranking changes. The panel displays multiple versions of rankings with timestamps, allowing users to see how their preferences have evolved over time.*
+*Sidebar panel showing the Your Journal tab for a specific song. The panel displays the song's rank, the user's rating, their review with timestamp, review history, and comments. Note that at Layer 3, the Besties tab is not available.*
 
-**Figure: Sidebar Panel - Review Tab**
+**Figure: Sidebar Panel - Community Tab**
 
 ```
 +-----------------------------------------------------+
-|  ← Red ❤️                                  [X]     |
+|  All Eras > Folklore > cardigan            [X]     |
+|  -----------------------------------------------    |
+|  | Your Journal | Community |                       |
 +-----------------------------------------------------+
+|                                                     |
+| Community Reviews (142):                            |
+|                                                     |
+| +-------------------------------------------+       |
+| | FolkloreQueen ★★★★★                     |       |
+| | "This song captures nostalgia perfectly..." |       |
+| | [Expand] [View Profile]                    |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | SwiftieForever ★★★★★                    |       |
+| | "The imagery in this song is so vivid..."  |       |
+| | [Expand] [3 Comments] [View Profile]       |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | MidnightsDreamer ★★★★☆                  |       |
+| | "Beautiful lyrics but I prefer august..."  |       |
+| | [Expand] [1 Comment] [View Profile]        |       |
+| +-------------------------------------------+       |
++-----------------------------------------------------+
+```
+
+*Sidebar panel showing the Community tab with reviews from other users. Each review shows the username, star rating, and a preview of the review content with options to expand and view the user's profile.*
+
+**Figure: Sidebar Panel - Besties Tab**
+
+```
++-----------------------------------------------------+
+|  ← Folklore 🤍                              [X]     |
++-----------------------------------------------------+
+|                                                     |
+| | Your Journal | Community | Besties |              |
++-----------------------------------------------------+
+|                                                     |
+| Folklore Era Besties                                |
+|                                                     |
+| Connected:                                          |
+|                                                     |
+| +-------------------------------------------+       |
+| | FolkloreQueen                             |       |
+| | 94% Match                                 |       |
+| | ↑ Connected May 9, 2025                   |       |
+| |                                           |       |
+| | Ranked Songs:                             |       |
+| | [#1 cardigan] [#2 august] [#3 exile] >    |       |
+| |                                           |       |
+| | [View Profile]                            |       |
+| +-------------------------------------------+       |
+|                                                     |
+| Discover:                                           |
+|                                                     |
+| +-------------------------------------------+       |
+| | MidnightsDreamer                          |       |
+| | 92% Match                                 |       |
+| |                                           |       |
+| | Ranked Songs:                             |       |
+| | [#1 cardigan] [#2 the 1] [#3 exile] >     |       |
+| |                                           |       |
+| | [Connect]                                 |       |
+| +-------------------------------------------+       |
++-----------------------------------------------------+
+```
+
+*Sidebar panel showing the Besties tab with connected users and potential matches. The Connected section shows users the current user has already connected with, while the Discover section shows potential new connections based on similar music preferences.*
 |                                                     |
 | | Rankings | History | Review & Notes |             |
 +-----------------------------------------------------+

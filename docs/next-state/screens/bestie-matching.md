@@ -24,63 +24,77 @@ The Bestie Matching View is a new screen introduced in v1.1 that displays a leag
 |                                                     |
 | Find users who share your music preferences:        |
 |                                                     |
-| ## League Table                                     |
+| ## Connected                                        |
 |                                                     |
-| 1. SwiftFan22                                       |
-|    92% Match                                        |
-|    Joined: April 15, 2025                           |
-|    [View Profile] [Expand Details ▼]                |
+| +-------------------------------------------+       |
+| | SwiftFan22                                |       |
+| | 92% Match                                 |       |
+| | ↑ Connected May 9, 2025                  |       |
+| |                                           |       |
+| | Top Eras:                                 |       |
+| | [❤️ Red] [💛 1989] [🤍 Folklore] >      |       |
+| |                                           |       |
+| | [View Profile]                            |       |
+| +-------------------------------------------+       |
 |                                                     |
-| 2. RedLover                                         |
-|    87% Match                                        |
-|    Joined: May 1, 2025                              |
-|    [View Profile] [Expand Details ▼]                |
+| +-------------------------------------------+       |
+| | RedLover                                  |       |
+| | 87% Match                                 |       |
+| | ↓ Connected May 1, 2025                  |       |
+| |                                           |       |
+| | Top Eras:                                 |       |
+| | [❤️ Red] [💚 Speak Now] [💜 Speak Now] > |       |
+| |                                           |       |
+| | [View Profile]                            |       |
+| +-------------------------------------------+       |
 |                                                     |
-| 3. Folklore1989                                     |
-|    81% Match                                        |
-|    Joined: April 22, 2025                           |
-|    [View Profile] [Expand Details ▼]                |
+| ## Discover                                         |
 |                                                     |
-| 4. ReputationEra                                    |
-|    78% Match                                        |
-|    Joined: May 3, 2025                              |
-|    [View Profile] [Expand Details ▼]                |
-|                                                     |
-| 5. EvermoreFan                                      |
-|    75% Match                                        |
-|    Joined: April 30, 2025                           |
-|    [View Profile] [Expand Details ▼]                |
+| +-------------------------------------------+       |
+| | Folklore1989                              |       |
+| | 81% Match                                 |       |
+| |                                           |       |
+| | Top Eras:                                 |       |
+| | [🤍 Folklore] [💛 1989] [💚 Speak Now] > |       |
+| |                                           |       |
+| | [Connect]                                 |       |
+| +-------------------------------------------+       |
 |                                                     |
 | ## Filters                                          |
 |                                                     |
-| Sort By: [Match %] [Join Date] [Activity]           |
+| View: [All Eras] [Specific Era ▼]                  |
+| Sort By: [Match %] [Connection Date] [Activity]     |
 |                                                     |
 +-----------------------------------------------------+
 ```
 
-*Bestie Matching view showing a ranked list of users with similar music taste. The screen includes a league table with similarity percentages, join dates, profile links, and expandable details. Sorting options allow users to filter the results by different criteria.*
+*Bestie Matching view showing users with similar music taste divided into Connected and Discover sections. The Connected section shows users the current user has already connected with, while the Discover section shows potential new connections. Each entry displays the match percentage, connection status with directional icons (↑ for outgoing, ↓ for incoming), and top ranked eras shown as heart emojis in a scrollable row. Filtering options allow users to view All Eras matches or matches for a specific era.*
 
 ## Component Details
 
-### LeagueTable.vue
+### BestieMatchList.vue
 
-The LeagueTable component displays a ranked list of users with similar music taste.
+The BestieMatchList component displays users with similar music taste in two sections: Connected and Discover.
 
 **Properties:**
 - `matches` (Array): List of user match objects with similarity scores
 - `currentUserId` (String): ID of the current user
-- `maxEntries` (Number): Maximum number of entries to display
+- `itemId` (String): ID of the era or "all" for global matches
+- `showConnected` (Boolean): Whether to show connected users
+- `showDiscover` (Boolean): Whether to show discoverable users
 - `sortBy` (String): Current sort criterion ("match", "date", "activity")
 
 **Events:**
 - `@viewProfile`: Emitted when a user profile is selected for viewing
-- `@toggleDetails`: Emitted when details section is expanded/collapsed
+- `@connect`: Emitted when the connect button is clicked
 - `@sortChange`: Emitted when sort criterion is changed
+- `@viewChange`: Emitted when view type is changed (All Eras/Specific Era)
 
 **Implementation Notes:**
-- Ranks users by similarity score by default
-- Provides alternative sorting options
-- Displays key user information and match percentage
+- Separates connected users from potential new connections
+- Displays connection status with directional icons (↑ for outgoing, ↓ for incoming)
+- Shows top ranked eras/songs as scrollable chips
+- Provides filtering between All Eras and Specific Era matches
 - Supports pagination for large numbers of matches
 
 ### SimilarityScore.vue
@@ -176,15 +190,17 @@ The Bestie Matching View interacts with the following state:
 
 ## Similarity Algorithm
 
-The matching algorithm considers multiple factors to calculate similarity scores:
+The matching algorithm focuses on top rankings to calculate similarity scores, providing a more meaningful connection between users with similar preferences for favorite content:
 
-1. **Ranking Overlap**: Percentage of songs that appear in both users' rankings
-2. **Ranking Order**: How closely the order of common songs matches
-3. **Rating Alignment**: Similarity of star ratings for the same eras
-4. **Review Sentiment**: Analysis of review text for similar sentiments
-5. **Weighting**: Higher weight given to top-ranked items
+1. **Focused Matching**: Matching is conducted only on top 3 songs of eras and top 3 eras
+2. **Dual Matching Types**:
+   - **All Eras Bestie**: Similarity based on how closely top 3 albums match
+   - **Specific Eras Bestie**: Similarity based on how closely top 3 songs of an era match
+3. **Ranking Order**: How closely the order of common songs/eras matches
+4. **Rating Alignment**: Similarity of star ratings for the same content
+5. **Connection Types**: Tracking of outgoing (user-initiated) and incoming (other-initiated) connections
 
-The algorithm produces a percentage score that represents overall music taste compatibility.
+The algorithm produces percentage scores for both global (All Eras) and era-specific compatibility, allowing users to find besties who share their taste in particular eras as well as overall music preferences.
 
 ## Reddit Verification Integration
 
