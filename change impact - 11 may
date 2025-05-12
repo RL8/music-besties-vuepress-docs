@@ -1,0 +1,1095 @@
+# Music Besties App v1.1
+
+This section contains documentation for version 1.1 of the Music Besties application, which includes several new features and improvements over the previous version.
+
+Key enhancements in v1.1 include:
+
+-   Ranking session limitations (24-hour cooldown)
+-   Ranking history tracking
+-   User account system with guest mode
+-   Social sharing capabilities
+-   Bestie matching system
+-   Reddit verification
+-   Profile privacy controls
+-   Modal/drawer support pages (Settings, Profile, About, Legal)
+-   Enhanced review and comment system for songs and eras
+-   Quick Ranking feature (3x3 format)
+-   Advanced sorting options for eras and songs
+
+For a detailed overview of the application architecture and features, please see the [overview](./overview.md) document.
+
+# Sidebar Panel
+
+The Sidebar Panel is a context-sensitive panel that slides in from the right side of the screen, providing detailed information and interaction options for individual songs within a specific music era. In v1.1, it has been redesigned to focus on song-level reviews and comments rather than era-level content, with a clear separation between personal and community content.
+
+## Screen Overview
+
+**Purpose:** Display a user's ranked songs within an era, allowing them to review and comment on individual songs while also accessing community feedback, all functioning as a personal music journal with social elements
+
+**Key Changes:**
+- Focus shifted from era reviews to individual song reviews and comments
+- Clear separation between personal content and community content via tabs
+- Simplified first view with essential information (rank, rating, comment count)
+- Comprehensive detail view for each song combining personal journal and community insights
+
+**Primary Components:**
+
+-   PanelHeader.vue (title, back button, close button)
+-   MainTabNavigation.vue (tab switching between "Your Rankings" and "Community")
+-   RankingsList.vue (ordered list of songs ranked by the user)
+-   SongCard.vue (compact display of song with rank, rating, and comment count)
+-   CommunityTabNavigation.vue (nested tabs for "Reviews" and "Comments")
+-   ReviewDisplay.vue (display and edit personal reviews for individual songs)
+-   ReviewHistory.vue (horizontal scroll of previous review edits with dates)
+-   CommentSection.vue (sequential blog-like commenting system for individual songs)
+-   MetricDisplay.vue (tallies of reviews and comments for songs)
+-   CommunityReviewsList.vue (list of reviews from other users)
+-   CommunityCommentsList.vue (list of comments from other users)
+-   ShareButton.vue (social sharing functionality)
+
+## Visual Layout
+
+### First View - Your Rankings Tab
+```
++-----------------------------------------------------+
+|  ← Red ❤️                                  [X]     |
++-----------------------------------------------------+
+|                                                     |
+| | Your Rankings | Community |                       |
++-----------------------------------------------------+
+|                                                     |
+| Your Ranked Songs:                                  |
+|                                                     |
+| +-------------------------------------------+       |
+| | #1 All Too Well                           |       |
+| | ★★★★★  💬 3                             |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | #2 State of Grace                         |       |
+| | ★★★★☆  💬 1                             |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | #3 22                                     |       |
+| | ★★★★★  💬 1                             |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | #4 I Knew You Were Trouble               |       |
+| | ★★★☆☆  💬 0                             |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | Unranked: Begin Again                     |       |
+| | ☆☆☆☆☆  💬 0                             |       |
+| +-------------------------------------------+       |
+|                                                     |
+| [Share Your Rankings]                               |
++-----------------------------------------------------+
+```
+
+### First View - Community Tab
+```
++-----------------------------------------------------+
+|  ← Red ❤️                                  [X]     |
++-----------------------------------------------------+
+|                                                     |
+| | Your Rankings | Community |                       |
++-----------------------------------------------------+
+|                                                     |
+| | Reviews | Comments |                              |
++-----------------------------------------------------+
+|                                                     |
+| Most Reviewed Songs in Red:                         |
+|                                                     |
+| +-------------------------------------------+       |
+| | All Too Well                              |       |
+| | ★★★★★ (142 reviews)                     |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | State of Grace                            |       |
+| | ★★★★☆ (98 reviews)                      |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | 22                                        |       |
+| | ★★★★★ (115 reviews)                     |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | I Knew You Were Trouble                   |       |
+| | ★★★★☆ (103 reviews)                     |       |
+| +-------------------------------------------+       |
+|                                                     |
+| +-------------------------------------------+       |
+| | Begin Again                               |       |
+| | ★★★★☆ (87 reviews)                      |       |
+| +-------------------------------------------+       |
+|                                                     |
+| Community Stats:                                    |
+| 487 users have reviewed songs from Red              |
++-----------------------------------------------------+
+```
+
+### Detail View - Your Journal (Combined Review and Comments)
+When a user taps a song from their rankings tab:
+
+```
++-----------------------------------------------------+
+|  ← All Too Well (Red)                      [X]     |
++-----------------------------------------------------+
+|                                                     |
+| | Your Journal | Community |                        |
++-----------------------------------------------------+
+|                                                     |
+| Ranked #1 in Your List                              |
+|                                                     |
+| Your Rating: ★★★★★                               |
+|                                                     |
+| Your Review (May 8, 2025):                          |
+| "The 10-minute version is a masterpiece of          |
+| storytelling. The bridge gives me chills every      |
+| time I listen to it."                               |
+|                                                     |
+| Review History:                                     |
+| [May 8] [May 1] [Apr 24] [Apr 15]                  |
+|                                                     |
+| [Edit Review]                                       |
+|                                                     |
+| Your Comments (3):                                  |
+|                                                     |
+| May 10, 2025                                        |
+| "Listened to the 10 min version today and noticed   |
+| new details in the bridge."                         |
+|                                                     |
+| May 7, 2025                                         |
+| "The production is incredible through good          |
+| headphones."                                        |
+|                                                     |
+| May 3, 2025                                         |
+| "This has become my go-to mood lifter this week."   |
+|                                                     |
+| [+ Add New Comment]                                 |
+| [Share Your Journal]                                |
++-----------------------------------------------------+
+```
+
+### Detail View - Community Tab (Reviews)
+```
++-----------------------------------------------------+
+|  ← All Too Well (Red)                      [X]     |
++-----------------------------------------------------+
+|                                                     |
+| | Your Journal | Community |                        |
++-----------------------------------------------------+
+|                                                     |
+| | Reviews | Comments |                              |
++-----------------------------------------------------+
+|                                                     |
+| Community Rating: ★★★★★ (142 reviews)           |
+|                                                     |
+| Sort by: [Newest ▼]                                 |
+|                                                     |
+| MusicFan22 ★★★★★                               |
+| "This song changed my life. The storytelling        |
+| is so vivid and emotional."                         |
+|                                                     |
+| SwiftieForever ★★★★★                           |
+| "The 10-minute version adds so much context         |
+| and makes the song even more powerful."             |
+|                                                     |
+| TaylorFan1989 ★★★★☆                            |
+| "One of her best songs ever. The bridge is          |
+| incredible."                                        |
+|                                                     |
+| [Load More Reviews]                                 |
++-----------------------------------------------------+
+```
+
+### Detail View - Community Tab (Comments)
+```
++-----------------------------------------------------+
+|  ← All Too Well (Red)                      [X]     |
++-----------------------------------------------------+
+|                                                     |
+| | Your Journal | Community |                        |
++-----------------------------------------------------+
+|                                                     |
+| | Reviews | Comments |                              |
++-----------------------------------------------------+
+|                                                     |
+| 356 Community Comments                              |
+|                                                     |
+| Sort by: [Newest ▼]                                 |
+|                                                     |
+| MusicFan22 - May 11, 2025                          |
+| "I notice something new every time I listen to      |
+| this song. Today it was the subtle guitar in        |
+| the background during the second verse."            |
+|                                                     |
+| SwiftieForever - May 10, 2025                      |
+| "Just realized the scarf references connect to      |
+| other songs in her discography!"                    |
+|                                                     |
+| TaylorFan1989 - May 9, 2025                        |
+| "This song hits differently in autumn. Perfect      |
+| for rainy days with a cup of coffee."               |
+|                                                     |
+| [Load More Comments]                                |
++-----------------------------------------------------+
+```
+
+## Component Details
+
+### MainTabNavigation.vue
+
+The MainTabNavigation component provides top-level navigation between personal and community content.
+
+**Properties:**
+- `activeTab` (String): Currently active tab ("your-rankings" or "community")
+
+**Events:**
+- `@tabChange`: Emitted when a tab is tapped, includes the new active tab
+
+**Implementation Notes:**
+- Clear visual distinction between tabs with touch targets sized for fingertip interaction
+- Maintains state when navigating between songs
+- Accessible touch navigation
+
+### SongCard.vue
+
+The SongCard component displays a compact view of a song in the user's rankings.
+
+**Properties:**
+- `songId` (String): Unique identifier for the song
+- `title` (String): Name of the song
+- `rank` (Number): Position in the user's rankings (null for unranked songs)
+- `rating` (Number): User's rating from 1-5 (null if not rated)
+- `commentCount` (Number): Number of comments by the user for this song
+
+**Events:**
+- `@tap`: Emitted when the card is tapped to view details
+
+**Implementation Notes:**
+- Entire card is tappable for better usability on touchscreens
+- Clear visual indication of rank and rating
+- Compact design optimized for mobile screens
+
+### CommunityTabNavigation.vue
+
+The CommunityTabNavigation component provides nested navigation within the Community tab.
+
+**Properties:**
+- `activeTab` (String): Currently active tab ("reviews" or "comments")
+
+**Events:**
+- `@tabChange`: Emitted when a tab is tapped, includes the new active tab
+
+**Implementation Notes:**
+- Visually distinct from main tab navigation
+- Only visible when Community tab is active
+- Touch targets sized appropriately for mobile interaction
+
+### ReviewDisplay.vue
+
+The ReviewDisplay component shows the user's review and rating for a song.
+
+**Properties:**
+- `songId` (String): ID of the song being reviewed
+- `rating` (Number): Current rating value (1-5)
+- `review` (String): Current review text
+- `lastUpdated` (Date): Timestamp of the last update
+- `readOnly` (Boolean): Whether the form is in read-only mode
+- `hasReview` (Boolean): Whether the user has created a review
+
+**Events:**
+- `@edit`: Emitted when the Edit Review button is tapped
+- `@save`: Emitted when a review is saved, includes the rating and review text
+- `@share`: Emitted when the Share Review button is tapped
+
+**Implementation Notes:**
+- Star rating input with touch-friendly targets
+- Character-limited text area with mobile-optimized keyboard
+- Clear timestamp of last update
+- Touch-friendly UI elements sized for fingertip interaction
+
+### ReviewHistory.vue
+
+The ReviewHistory component displays previous versions of a review.
+
+**Properties:**
+- `historyEntries` (Array): List of historical review entries with timestamps and content
+- `currentIndex` (Number): Index of the currently displayed review
+
+**Events:**
+- `@selectVersion`: Emitted when a historical version is tapped for viewing
+
+**Implementation Notes:**
+- Touch-friendly horizontal swipe interface for browsing history
+- Clear date indicators for each version
+- Visual indication of currently selected version
+- Gesture support for swiping between versions
+
+### CommentSection.vue
+
+The CommentSection component manages the user's sequential comments for a song.
+
+**Properties:**
+- `songId` (String): ID of the song being commented on
+- `comments` (Array): List of user comments with timestamps and content
+- `totalUserComments` (Number): Total number of comments by the current user
+
+**Events:**
+- `@add`: Emitted when a new comment is added via the mobile input
+- `@delete`: Emitted when a comment is deleted via swipe or tap action
+- `@edit`: Emitted when a comment is edited after tap-to-edit
+
+**Implementation Notes:**
+- Chronological display of comments with newest first
+- Mobile-optimized text input with predictive text support
+- Clear timestamps for each comment
+- Swipe gestures for quick actions on comments
+
+### CommunityReviewsList.vue
+
+The CommunityReviewsList component displays reviews from other users.
+
+**Properties:**
+- `songId` (String): ID of the song
+- `reviews` (Array): List of community reviews with user info, ratings, and content
+- `sortOption` (String): Current sort option ("newest", "highest-rated", etc.)
+
+**Events:**
+- `@sortChange`: Emitted when sort option changes via touch selection
+- `@loadMore`: Emitted when user taps to load more reviews or swipes up at the bottom of the list
+
+**Implementation Notes:**
+- Paginated display with infinite scroll support for mobile
+- Touch-friendly sort controls with dropdown selection
+- Clear attribution of reviews to users
+- Optimized for vertical scrolling on mobile screens
+
+### CommunityCommentsList.vue
+
+The CommunityCommentsList component displays comments from other users.
+
+**Properties:**
+- `songId` (String): ID of the song
+- `comments` (Array): List of community comments with user info and content
+- `sortOption` (String): Current sort option ("newest", "oldest", etc.)
+
+**Events:**
+- `@sortChange`: Emitted when sort option changes via touch selection
+- `@loadMore`: Emitted when user taps to load more comments or swipes up at the bottom of the list
+
+**Implementation Notes:**
+- Paginated display with infinite scroll support for mobile
+- Touch-friendly sort controls with dropdown selection
+- Clear attribution of comments to users with timestamps
+- Optimized for vertical scrolling on mobile screens
+
+### MetricDisplay.vue
+
+The MetricDisplay component shows statistics about reviews and comments.
+
+**Properties:**
+- `songId` (String): ID of the song
+- `totalReviewers` (Number): Number of users who have reviewed this song
+- `totalCommenters` (Number): Number of users who have commented on this song
+- `totalComments` (Number): Total number of comments across all users
+
+**Implementation Notes:**
+- Compact display of key metrics optimized for mobile screen space
+- Used in both personal and community views for context
+- Updates in real-time as data changes
+- Touch-friendly design with appropriate spacing for mobile viewing
+
+# Edit Rankings View
+
+The Edit Rankings View provides an interface for users to select and rank items within specific music eras, with two distinct ranking modes and enhanced sorting options.
+
+## Screen Overview
+
+**Purpose:** Allow users to select favorite songs from eras and arrange them in a personalized ranking order, with options for quick ranking or full ranking
+
+**Primary Components:**
+
+
+-   RankingModeSelector.vue (toggle between Quick Rank and Full Rank modes)
+-   SelectionTabs.vue (tab navigation between eras)
+-   SortingControls.vue (options for sorting songs)
+-   ItemChip.vue (multiple instances for selectable songs)
+-   HeaderControls.vue (cancel/save buttons, title)
+-   SelectionCounter.vue (shows progress)
+
+## Visual Layout
+
+### Mode Selection
+
+\+-----------------------------------------------------+
+| Music Besties |
+\+-----------------------------------------------------+
+| \[Cancel] \[Save] |
+\+-----------------------------------------------------+
+| |
+| Choose your ranking mode: |
+| |
+| \[Quick Rank] \[Full Rank] |
+| (3x3 format) (All songs) |
+| |
+| Quick Rank: Select your top 3 eras and top 3 songs |
+| from each era. Perfect for casual fans or beginners.|
+| |
+| Full Rank: Rank as many eras and songs as you want. |
+| Minimum requirement: 3 eras with 3 songs each. |
+| |
+\+-----------------------------------------------------+
+
+### Quick Rank Mode
+
+\+-----------------------------------------------------+
+| Music Besties |
+\+-----------------------------------------------------+
+| \[Cancel] Quick Rank \[Save] |
+\+-----------------------------------------------------+
+| |
+| Step 1: Select your top 3 eras (3/3) |
+| |
+| \[✓] Red |
+| \[✓] 1989 |
+| \[✓] folklore |
+| \[ ] Fearless |
+| \[ ] Reputation |
+| \[ ] evermore |
+| |
+| Step 2: For each selected era, choose top 3 songs |
+| |
+| Red (3/3): |
+| \[✓] All Too Well |
+| \[✓] State of Grace |
+| \[✓] 22 |
+| \[ ] I Knew You Were Trouble |
+| |
+\+-----------------------------------------------------+
+
+### Full Rank Mode with Sorting
+
+\+-----------------------------------------------------+
+| Music Besties |
+\+-----------------------------------------------------+
+| \[Cancel] Full Rank \[Save] |
+\+-----------------------------------------------------+
+| |
+| Taylor Swift | Fearless | Red | 1989 | Reputation |
+\+-----------------------------------------------------+
+| |
+| Sort by: \[Position ▼] \[Your Ranking ▼] |
+| |
+| Select your favorite songs from Red (12/30) |
+| |
+| \[✓] All Too Well |
+| \[✓] State of Grace |
+| \[✓] 22 |
+| \[✓] I Knew You Were Trouble |
+| \[✓] We Are Never Ever Getting Back Together |
+| \[ ] Begin Again |
+| \[ ] Red |
+| \[ ] Treacherous |
+| |
+\+-----------------------------------------------------+
+
+## New Component Details
+
+### RankingModeSelector.vue
+
+The RankingModeSelector component allows users to choose between Quick Rank and Full Rank modes.
+
+**Properties:**
+
+-   `selectedMode` (String): Currently selected mode ("quick" or "full")
+-   `quickRankDescription` (String): Description text for Quick Rank mode
+-   `fullRankDescription` (String): Description text for Full Rank mode
+
+**Events:**
+
+-   `@modeChange`: Emitted when the mode is changed, includes the new mode
+
+**Implementation Notes:**
+
+-   Visual toggle between two options
+-   Descriptive text explaining each mode
+-   Persists selection in user preferences
+
+### SortingControls.vue
+
+The SortingControls component provides options for sorting the song list.
+
+**Properties:**
+
+-   `sortOptions` (Array): Available sorting options
+-   `currentSort` (Object): Currently selected sort option and direction
+-   `itemType` (String): Type of items being sorted ("eras" or "songs")
+
+**Events:**
+
+-   `@sortChange`: Emitted when the sort option or direction changes
+
+**Implementation Notes:**
+
+-   Dropdown or toggle buttons for sort options
+-   Direction indicators (ascending/descending)
+-   Applies sorting immediately when changed
+
+## Updated State Management
+
+The Edit Rankings View now interacts with the following additional state:
+
+-   **Ranking Mode**: Tracks whether the user is in Quick Rank or Full Rank mode
+-   **Sort Preferences**: Stores the user's sorting preferences for eras and songs
+-   **Quick Rank Selections**: Special tracking for the 3x3 format selections
+-   **Validation State**: Ensures minimum requirements are met before saving
+
+## Quick Rank Implementation
+
+The Quick Rank feature is implemented as follows:
+
+1.  User selects Quick Rank mode from the mode selector
+2.  Interface guides user to first select exactly 3 top eras
+3.  For each selected era, user selects exactly 3 top songs
+4.  System validates that exactly 3 eras and 3 songs per era are selected
+5.  These selections are integrated into the user's overall rankings
+6.  Quick Rank selections are highlighted in the Dashboard view
+
+## Sorting Implementation
+
+The sorting functionality is implemented as follows:
+
+1.  For eras on the Dashboard:
+
+    -   By release date (oldest first \[default] or newest first)
+    -   By user's personal ranking (top first or bottom first)
+    -   Unranked items always appear below ranked items
+2.  For songs in Edit Rankings:
+
+    -   By position number within era (low to high \[default] or high to low)
+    -   By user's personal ranking (top first or bottom first)
+    -   Unranked items always appear below ranked items
+
+## Validation Rules
+
+Before saving rankings, the system validates:
+
+1.  In Quick Rank mode:
+
+    -   Exactly 3 eras are selected
+    -   Exactly 3 songs are selected for each of those eras
+2.  In Full Rank mode:
+
+    -   At least 3 eras are selected
+    -   At least 3 songs are selected for each of those eras
+
+If validation fails, a helpful message guides the user to complete their selections.
+
+# Dashboard View
+
+The Dashboard View is the main entry point of the Music Besties application. It displays a grid of era cards with enhanced sorting options and metrics for reviews and comments, each representing a music era that the user can interact with.
+
+## Screen Overview
+
+**Purpose:** Provide a visual overview of all music eras and their current status (ratings, selections, history, reviews, comments)
+
+**Primary Components:**
+
+-   EraCard.vue (multiple instances in grid layout)
+-   HeaderBar.vue (app title, navigation menu, edit button)
+-   HistoryIndicator.vue (shows ranking history availability)
+-   SortControls.vue (options for sorting era cards)
+-   MetricDisplay.vue (shows review and comment counts)
+-   FooterDisclaimer.vue (legal text)
+
+## Visual Layout
+
+\+-----------------------------------------------------+
+| Music Besties |
+\+-----------------------------------------------------+
+| ☰ \[Edit] |
+\+-----------------------------------------------------+
+| Sort by: \[Release Date ▼] \[Your Ranking ▼] |
+\+-----------------------------------------------------+
+| |
+| \+---------------+ \+---------------+ \+----------+ |
+| |
+| 🤠 | 💛 | 💜 |
+| |
+| Taylor Swift | Fearless | Speak Now|
+| |
+| ★★★★☆ | ★★★★★ | ★★★☆☆ |
+| |
+| 5/13 songs | 8/19 songs | 3/16 songs|
+| |
+| 📊 ✍️(1) 💬(3)| 📊 ✍️(1) 💬(5)| 📊 ✍️(0) 💬(0)|
+| |
+\+---------------+ \+---------------+ \+----------+ |
+| |
+| \+---------------+ \+---------------+ \+----------+ |
+| |
+| ❤️ | 🌊 | 🐍 |
+| |
+| Red | 1989 | Reputation|
+| |
+| ★★★★★ | ★★★★☆ | ★★★★☆ |
+| |
+| 12/30 songs | 7/16 songs | 6/15 songs|
+| |
+| 📊 ✍️(1) 💬(8)| 📊 ✍️(1) 💬(2)| 📊 ✍️(1) 💬(4)|
+| |
+\+---------------+ \+---------------+ \+----------+ |
+| |
+| This is an unofficial fan-made app |
+\+-----------------------------------------------------+
+
+## New Component Details
+
+### SortControls.vue
+
+The SortControls component provides options for sorting era cards.
+
+**Properties:**
+
+-   `sortOptions` (Array): Available sorting options
+-   `currentSort` (Object): Currently selected sort option and direction
+
+**Events:**
+
+-   `@sortChange`: Emitted when the sort option or direction changes
+
+**Implementation Notes:**
+
+-   Dropdown or toggle buttons for sort options
+-   Direction indicators (ascending/descending)
+-   Applies sorting immediately when changed
+
+### MetricDisplay.vue
+
+The MetricDisplay component shows review and comment statistics.
+
+**Properties:**
+
+-    `itemId` (String): ID of the era
+-    `hasReview` (Boolean): Whether the user has created a review
+-    `commentCount` (Number): Number of comments by the user
+-    `totalReviewers` (Number): Number of users who have reviewed this era
+-    `totalCommenters` (Number): Number of users who have commented on this era
+
+**Implementation Notes:**
+
+-   Compact display with icons for reviews (✍️) and comments (💬)
+-   Shows user's own metrics and community totals
+-   Tooltip with detailed breakdown on hover
+
+## Updated EraCard.vue
+
+The EraCard component now includes additional properties:
+
+**New Properties:**
+
+-   `hasReview` (Boolean): Whether the user has created a review for this era
+-   `commentCount` (Number): Number of comments by the user for this era
+-   `totalReviewers` (Number): Number of users who have reviewed this era
+-    `totalCommenters` (Number): Number of users who have commented on this era
+
+## Updated User Interactions
+
+| Interaction | Result | Technical Implementation |
+|-------------|--------|---------------------------|
+| Click sort controls | Changes the sort order of era cards | Emits `@sortChange` event, updates sort state |
+| Click on review icon | Opens the Sidebar Panel with Review tab active | Emits `@reviewClick` event with era ID |
+| Click on comment icon | Opens the Sidebar Panel with Comments tab active | Emits `@commentClick` event with era ID |
+
+## Updated State Management
+
+The Dashboard View now interacts with the following additional state:
+
+-   **Sort Preferences**: Determines the order of era cards (by release date or personal ranking)
+-   **Review Data**: Information about user reviews and community review counts
+-   **Comment Data**: Information about user comments and community comment counts
+
+# Support Pages
+
+This section covers the utility screens in the Music Besties application, including Settings, Profile, About, and Terms/Privacy views. In v1.1, these screens have been enhanced to display as modal/drawer overlays that maintain the user's context in the main application.
+
+## Modal/Drawer Implementation
+
+**Purpose:** Provide access to support information and settings without navigating away from the main application flow
+
+**Primary Components:**
+
+-   ModalContainer.vue (overlay container with backdrop)
+-   DrawerPanel.vue (sliding panel from edge of screen)
+-   TabNavigation.vue (for switching between sections in larger content areas)
+-   ScrollableContent.vue (for comfortable viewing of longer content)
+
+### Visual Layout
+
+#### Settings Modal/Drawer
+
+```
++-----------------------------------------------------+
+|                   Music Besties                     |
++-----------------------------------------------------+
+| ☰                                         [Edit]    |
++-----------------------------------------------------+
+|                                                     |
+|  +---------------+  +---------------+  +----------+ |
+|  | 🤠            |  | 💛            |  | 💜       | |
+|  | Taylor Swift  |  | Fearless      |  | Speak Now| |
+|  | ★★★★☆        |  | ★★★★★        |  | ★★★☆☆    | |
+|  | 5/13 songs    |  | 8/19 songs    |  | 3/16 songs| |
+|  | 📊 ✍️(1) 💬(3)|  | 📊 ✍️(1) 💬(5)|  | 📊 ✍️(0) 💬(0)| |
+|  +---------------+  +---------------+  +----------+ |
++-----------------------------------------------------+
+|                                                     |
+|  +-----------------------------------------+        |
+|  |  Settings                        [X]    |        |
+|  |-----------------------------------------|        |
+|  |                                         |        |
+|  | ## Appearance                           |        |
+|  |                                         |        |
+|  | Theme:                                  |        |
+|  | ( ) Light                               |        |
+|  | ( ) Dark                                |        |
+|  | (•) System Default                      |        |
+|  |                                         |        |
+|  | ## Notifications                        |        |
+|  |                                         |        |
+|  | Enable Notifications: [X]               |        |
+|  | Ranking Reminders:    [X]               |        |
+|  | Review Reminders:     [ ]               |        |
+|  | Bestie Matches:       [X]               |        |
+|  |                                         |        |
+|  | ## Privacy                              |        |
+|  |                                         |        |
+|  | Public Profile:       [X]               |        |
+|  | Show Rankings:        [X]               |        |
+|  | Show Reviews:         [X]               |        |
+|  | Show Besties:         [ ]               |        |
+|  |                                         |        |
+|  | ## Account Verification                 |        |
+|  |                                         |        |
+|  | [Connect Reddit Account]                |        |
+|  |                                         |        |
+|  +-----------------------------------------+        |
+|                                                     |
++-----------------------------------------------------+
+```
+
+#### Profile Modal/Drawer
+
+```
++-----------------------------------------------------+
+|                   Music Besties                     |
++-----------------------------------------------------+
+| ☰                                         [Edit]    |
++-----------------------------------------------------+
+|                                                     |
+|  +---------------+  +---------------+  +----------+ |
+|  | 🤠            |  | 💛            |  | 💜       | |
+|  | Taylor Swift  |  | Fearless      |  | Speak Now| |
+|  | ★★★★☆        |  | ★★★★★        |  | ★★★☆☆    | |
+|  | 5/13 songs    |  | 8/19 songs    |  | 3/16 songs| |
+|  | 📊 ✍️(1) 💬(3)|  | 📊 ✍️(1) 💬(5)|  | 📊 ✍️(0) 💬(0)| |
+|  +---------------+  +---------------+  +----------+ |
++-----------------------------------------------------+
+|                                                     |
+|  +-----------------------------------------+        |
+|  |  Profile                         [X]    |        |
+|  |-----------------------------------------|        |
+|  |                                         |        |
+|  |            [Profile Image]              |        |
+|  |                                         |        |
+|  |            Music Lover                  |        |
+|  |                                         |        |
+|  | Public Profile:                         |        |
+|  | musicbesties.app/u/musiclover          |        |
+|  | [Copy Link] [Share Profile]             |        |
+|  |                                         |        |
+|  | ## Your Stats                           |        |
+|  |                                         |        |
+|  | Rankings Created: 42                    |        |
+|  | Reviews Written: 37                     |        |
+|  | Comments Added: 128                     |        |
+|  | Account Age: 3 months                   |        |
+|  |                                         |        |
+|  | ## Bestie Matches                       |        |
+|  |                                         |        |
+|  | SwiftieForever - 92% match              |        |
+|  | TaylorFan1989 - 87% match               |        |
+|  | MusicFan22 - 83% match                  |        |
+|  |                                         |        |
+|  | [View All Matches]                      |        |
+|  |                                         |        |
+|  +-----------------------------------------+        |
+|                                                     |
++-----------------------------------------------------+
+```
+
+#### About Modal/Drawer
+
+```
++-----------------------------------------------------+
+|                   Music Besties                     |
++-----------------------------------------------------+
+| ☰                                         [Edit]    |
++-----------------------------------------------------+
+|                                                     |
+|  +---------------+  +---------------+  +----------+ |
+|  | 🤠            |  | 💛            |  | 💜       | |
+|  | Taylor Swift  |  | Fearless      |  | Speak Now| |
+|  | ★★★★☆        |  | ★★★★★        |  | ★★★☆☆    | |
+|  | 5/13 songs    |  | 8/19 songs    |  | 3/16 songs| |
+|  | 📊 ✍️(1) 💬(3)|  | 📊 ✍️(1) 💬(5)|  | 📊 ✍️(0) 💬(0)| |
+|  +---------------+  +---------------+  +----------+ |
++-----------------------------------------------------+
+|                                                     |
+|  +-----------------------------------------+        |
+|  |  About                           [X]    |        |
+|  |-----------------------------------------|        |
+|  |                                         |        |
+|  | Music Besties                           |        |
+|  | Version 1.1                             |        |
+|  |                                         |        |
+|  | Music Besties is a fan-made application |        |
+|  | designed to help music enthusiasts      |        |
+|  | organize, rank, and review their        |        |
+|  | favorite albums and songs.              |        |
+|  |                                         |        |
+|  | The application provides an intuitive   |        |
+|  | interface for creating personalized     |        |
+|  | music collections with custom rankings  |        |
+|  | and detailed reviews, while also        |        |
+|  | connecting users with other fans who    |        |
+|  | share similar musical tastes.           |        |
+|  |                                         |        |
+|  | ## Credits                              |        |
+|  |                                         |        |
+|  | Developed by: Music Besties Team        |        |
+|  | Contact: support@musicbesties.app       |        |
+|  |                                         |        |
+|  | This is an unofficial fan-made app and  |        |
+|  | is not affiliated with any artist or    |        |
+|  | record label.                           |        |
+|  |                                         |        |
+|  +-----------------------------------------+        |
+|                                                     |
++-----------------------------------------------------+
+```
+
+#### Legal/Terms Modal/Drawer
+
+```
++-----------------------------------------------------+
+|                   Music Besties                     |
++-----------------------------------------------------+
+| ☰                                         [Edit]    |
++-----------------------------------------------------+
+|                                                     |
+|  +---------------+  +---------------+  +----------+ |
+|  | 🤠            |  | 💛            |  | 💜       | |
+|  | Taylor Swift  |  | Fearless      |  | Speak Now| |
+|  | ★★★★☆        |  | ★★★★★        |  | ★★★☆☆    | |
+|  | 5/13 songs    |  | 8/19 songs    |  | 3/16 songs| |
+|  | 📊 ✍️(1) 💬(3)|  | 📊 ✍️(1) 💬(5)|  | 📊 ✍️(0) 💬(0)| |
+|  +---------------+  +---------------+  +----------+ |
++-----------------------------------------------------+
+|                                                     |
+|  +-----------------------------------------+        |
+|  |  Terms & Privacy                  [X]    |        |
+|  |-----------------------------------------|        |
+|  |                                         |        |
+|  | | Terms of Service | Privacy Policy |   |        |
+|  |-----------------------------------------|        |
+|  |                                         |        |
+|  | ## Terms of Service                     |        |
+|  |                                         |        |
+|  | 1. Acceptance of Terms                  |        |
+|  |                                         |        |
+|  | By accessing or using Music Besties,    |        |
+|  | you agree to be bound by these Terms    |        |
+|  | of Service. If you do not agree to      |        |
+|  | these terms, please do not use the      |        |
+|  | application.                            |        |
+|  |                                         |        |
+|  | 2. User Accounts                        |        |
+|  |                                         |        |
+|  | You may use the app in guest mode or    |        |
+|  | create an account. If you create an     |        |
+|  | account, you are responsible for        |        |
+|  | maintaining the confidentiality of      |        |
+|  | your account information and for all    |        |
+|  | activities that occur under your        |        |
+|  | account.                                |        |
+|  |                                         |        |
+|  | Last Updated: May 9, 2025               |        |
+|  |                                         |        |
+|  +-----------------------------------------+        |
+|                                                     |
++-----------------------------------------------------+
+```
+
+## Component Details
+
+### ModalContainer.vue
+
+The ModalContainer component provides a centered overlay for support pages.
+
+**Properties:**
+
+-   `isOpen` (Boolean): Whether the modal is currently displayed
+-   `title` (String): The title to display in the header
+-   `size` (String): Size variant ("small", "medium", "large", "fullscreen")
+-   `showCloseButton` (Boolean): Whether to show the close button
+
+**Events:**
+
+-   `@close`: Emitted when the close button is clicked or backdrop is clicked
+-   `@animationComplete`: Emitted when open/close animations complete
+
+**Implementation Notes:**
+
+-   Semi-transparent backdrop that dims the main application
+-   Smooth open/close animations
+-   Responsive sizing based on content and screen size
+-   Focus trap for accessibility
+-   Scrollable content area for longer pages
+
+### DrawerPanel.vue
+
+The DrawerPanel component provides a sliding panel from the edge of the screen.
+
+**Properties:**
+
+-   `isOpen` (Boolean): Whether the drawer is currently displayed
+-   `title` (String): The title to display in the header
+-   `position` (String): Which edge to slide from ("left", "right", "bottom")
+-   `width` (String): Width of the drawer (for left/right positions)
+-   `height` (String): Height of the drawer (for bottom position)
+-   `showCloseButton` (Boolean): Whether to show the close button
+
+**Events:**
+
+-   `@close`: Emitted when the close button is clicked or backdrop is clicked
+-   `@animationComplete`: Emitted when open/close animations complete
+
+**Implementation Notes:**
+
+-   Smooth slide animations
+-   Semi-transparent backdrop
+-   Responsive sizing
+-   Touch gestures for closing (swipe)
+-   Focus trap for accessibility
+
+## Navigation Integration
+
+The left sidebar navigation continues to provide access to these support pages, but now opens them as overlays instead of navigating to new routes.
+
+**Implementation Notes:**
+- Navigation links emit events to open the appropriate modal/drawer
+- Current application state is preserved while viewing support pages
+- Browser history is not affected by opening/closing these overlays
+- Keyboard shortcuts provide quick access to common settings
+
+## Settings View
+
+The Settings View is now displayed as a modal/drawer overlay while maintaining all existing functionality. This allows users to adjust their preferences without losing their context in the main application.
+
+**Key Features:**
+- All settings categories (Appearance, Notifications, Privacy, Account Verification) remain accessible
+- Changes take effect immediately without requiring page navigation
+- The modal can be dismissed to return to the exact previous state
+- Settings are organized into logical groups with clear labels
+
+## Profile View
+
+The Profile View is now displayed as a modal/drawer overlay, allowing users to view their profile information without navigating away from their current context.
+
+**Key Features:**
+- Profile statistics and information are readily accessible
+- Social sharing options for profile content
+- Bestie matches displayed with similarity percentages
+- Public profile link for sharing with other users
+
+
+
+## About View
+
+The About View is now displayed as a modal/drawer overlay, providing information about the application without requiring users to navigate away from their current context.
+
+**Key Features:**
+- Application information and version details remain accessible
+- Credits and contact information are clearly displayed
+- The modal can be dismissed to return to the exact previous state
+- Content is organized in a readable, scrollable format
+
+## Terms/Privacy View
+
+The Terms/Privacy View is now displayed as a modal/drawer overlay, allowing users to review legal information without losing their place in the application.
+
+**Key Features:**
+- Tabbed interface separates Terms of Service and Privacy Policy
+- Legal content is presented in a readable, scrollable format
+- Last updated timestamp shows when legal documents were modified
+- The modal can be dismissed to return to the exact previous state
+
+
+
+## Navigation Integration
+
+The left sidebar navigation continues to provide access to these support pages, but now opens them as overlays instead of navigating to new routes.
+
+**Implementation Notes:**
+
+-   Navigation links emit events to open the appropriate modal/drawer
+-   Current application state is preserved while viewing support pages
+-   Browser history is not affected by opening/closing these overlays
+-   Keyboard shortcuts provide quick access to common settings
+
+# Summary of All Required Changes
+
+Based on my analysis of the feature enhancement plan and the current documentation, here's a summary of the changes required for each document:
+
+**README.md**
+
+-   Add the new feature enhancements to the key enhancements list
+
+**Sidebar Panel**
+
+-   Revise to focus on personal reviews and comments for songs and eras
+-   Support one editable review per song/era with edit history
+-   Add unlimited sequential blog-like comments
+-   Implement tallying of reviews and comments across users
+-   Split Review & Notes tab into separate Review and Comments tabs
+
+**Edit Rankings View**
+
+-   Add Quick Ranking feature (3x3 format)
+-   Implement mode selection between Quick Rank and Full Rank
+-   Add sorting options for songs (by position or personal ranking)
+-   Ensure minimum requirements for saving (3 eras with 3 songs each)
+
+**Dashboard View**
+
+-   Add sorting options for eras (by release date or personal ranking)
+-   Update era cards to show review and comment tallies
+-   Ensure compatibility with the new sidebar functionality
+
+**Support Pages (Settings, Profile, About, Legal)**
+
+-   Convert all support pages to modal/drawer views
+-   Ensure these views overlay the main application without navigating away
+-   Maintain the same functionality and content within the modal/drawer format
+
+These changes will create a more streamlined user experience with enhanced functionality for reviews, comments, ranking, and navigation. The implementation maintains the core functionality of the application while adding new features that improve usability and engagement.
+
+Would you like me to provide more detailed changes for any specific document or feature?
