@@ -200,13 +200,13 @@ The main entry point displaying music era information with history indicators.
 Shows user-specific information, statistics, sharing options, and preferences.
 
 ### Your Besties View
-Displays a league table of users with similar music taste, ranked by similarity percentage.
+New in v1.1, displays users with similar music taste for social connections.
 
 ### Settings View
-Allows configuration of application preferences, privacy options, and account verification.
+Allows configuration of app preferences, notifications, and account settings.
 
 ### About View
-Displays information about the application, version details, and credits.
+Provides information about the application, version history, and credits.
 
-### Terms/Privacy View
-Provides legal information about terms of service and privacy policy.
+### Terms & Privacy View
+Displays legal information including terms of service and privacy policy.
